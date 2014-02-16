@@ -1,5 +1,7 @@
 # Sprite Sheet Scripts for Adobe Creative Suite
 
+Contained herein is a set of handy scripts for automating the maniuplation of tiled sprite sheets within Adobe Creative Suite. The scripts have been written with Unreal Engine content creators in mind, but they may prove useful for other purposes.
+
 ## Script 1: Sprite Sheet from After Effects Composition
 
 This script enables the user to create a sprite sheet directly from an After Effects composition and have it saved automatically in multiple different sizes. The screenshot below shows the options presented to the user:
