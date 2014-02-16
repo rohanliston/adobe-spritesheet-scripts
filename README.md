@@ -17,3 +17,7 @@ This script works much the same as the first one, except it is intended to be us
 This script is designed to split an existing sprite sheet back into individual frames so that they can be manipulated and rearranged easily. This may be useful when the source files are not available for a particular sprite sheet.
 
 ![Screenshot](http://www.rohanliston.com/images/images/article_images/sprite_sheet_tools/dialog_05.png)
+
+## More details
+
+See [rohanliston.com](http://www.rohanliston.com/portfolio/just-for-fun?id=23)
