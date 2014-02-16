@@ -20,4 +20,4 @@ This script is designed to split an existing sprite sheet back into individual f
 
 ## More details
 
-See [rohanliston.com](http://www.rohanliston.com/portfolio/just-for-fun?id=23)
+See [rohanliston.com](http://www.rohanliston.com/portfolio/just-for-fun?id=23) for more details, and feel free to take a look around the other sections of the site while you're there!
