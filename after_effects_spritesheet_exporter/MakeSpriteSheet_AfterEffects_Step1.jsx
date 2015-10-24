@@ -19,7 +19,7 @@
 var photoshopScriptPath = Folder.myDocuments.absoluteURI.toString() + "/Adobe Scripts/MakeSpriteSheet_AfterEffects_Step2.jsx";   // Path to the Photoshop script that takes over (should be in My Documents)
 var outputFilePath = Folder.myDocuments.absoluteURI.toString() + "/Adobe Scripts/MakeSpriteSheet_AfterEffects.ini";               // Where the output .ini file will be saved (by default, this is in the same folder as the script)
 
-app.TimecodeDisplayType = TimecodeDisplayType.FRAMES;           // We will use Frames as our units
+app.project.timeDisplayType = TimeDisplayType.FRAMES;           // We will use Frames as our units
 var acceptableSheetSizes = [2048, 1024, 512, 256, 128, 64];     // List of acceptable square sheet sizes (in pixels)
 var exportFolderName = "FrameExports";                          // Name of the folder to which individual frames will be rendered 
 var projectName;                                                // Name of the After Effects project
