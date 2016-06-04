@@ -1,6 +1,7 @@
 #script "Sheetify"
 #target aftereffects
 #include "(support)/SheetifyDialog.jsx"
+#include "(support)/Sheetifier.jsx"
 
 /**
  * Finds the active composition, prompts the user for options, and renders the spritesheet.
@@ -42,7 +43,8 @@ function main()
     sheetifyDialog.show();
 
     // Sheetify!
-    alert(sheetifyDialog.debugString());
+    var sheetifier = new Sheetifier(sourceComp, sheetifyDialog.config());
+    sheetifier.sheetify();
 }
 
 main();
