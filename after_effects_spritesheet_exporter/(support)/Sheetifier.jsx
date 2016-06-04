@@ -1,3 +1,5 @@
+#include "SheetifyExporter.jsx"
+
 /**
  * Sheetifier: Generates sprite sheets from After Effects compositions.
  */
@@ -37,6 +39,9 @@ function Sheetifier(sourceComp, config)
                 ++currentFrame;
             }
         }
+
+        this.export();
+        this.deleteDestComp();
     };
 
     /**
@@ -55,11 +60,23 @@ function Sheetifier(sourceComp, config)
         );
     }
 
+    this.deleteDestComp = function()
+    {
+        this.destComp.remove();
+        this.destComp = null;
+    }
+
     /**
      * Returns the time of the given frame in seconds.
      */
     this.timeAtFrame = function(frame)
     {
         return frame / this.sourceComp.frameRate;
+    }
+
+    this.export = function()
+    {
+        var exporter = new SheetifyExporter();
+        exporter.export(this.destComp, this.config);
     }
 }
