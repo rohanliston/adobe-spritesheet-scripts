@@ -209,6 +209,8 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
         this.dialog.sheetOptionsPanel.dimensionsGroup.totalLabel.graphics.foregroundColor = (this.isSquare() ? this.greenPen : this.yellowPen);
         this.dialog.sheetOptionsPanel.dimensionsGroup.squareLabel.graphics.foregroundColor = (this.isSquare() ? this.greenPen : this.yellowPen);
         this.dialog.sheetOptionsPanel.dimensionsGroup.disparityLabel.graphics.foregroundColor = this.disparityColour();
+
+        // TODO: Add warning if output size > source size
     };
 
     /**
