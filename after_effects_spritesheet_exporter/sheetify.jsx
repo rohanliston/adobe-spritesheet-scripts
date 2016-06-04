@@ -42,6 +42,7 @@ function main()
     sheetifyDialog.show();
 
     // Sheetify!
+    alert(sheetifyDialog.debugString());
 }
 
 main();
