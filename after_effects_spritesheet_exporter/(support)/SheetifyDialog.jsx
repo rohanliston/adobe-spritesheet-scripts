@@ -49,6 +49,20 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.yellowPen = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0, 1.0, 0.0], 1);
 
     /**
+     * Returns a string for debugging purposes.
+     */
+    this.debugString = function()
+    {
+        return "Sheet name: "                  + this.sheetName
+             + "\nNum source frames: "         + this.numSourceFrames
+             + "\nSource frame width/height: " + this.sourceFrameWidth + " x " + this.sourceFrameHeight
+             + "\nDesired cols/rows: "         + this.numDesiredCols + " x " + this.numDesiredRows
+             + "\nResultant pixel size: "      + this.sheetPixelSizeString()
+             + "\nSquare: "                    + (this.isSquare() ? "true" : "false")
+             + "\nOutput sizes: "              + this.outputSizes().toString();
+    };
+
+    /**
      * Returns the number of frames that will be rendered given the number of desired cols/rows.
      */
     this.numDestinationFrames = function()
