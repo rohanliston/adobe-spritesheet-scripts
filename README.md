@@ -1,6 +1,6 @@
 # Sprite Sheet Scripts for Adobe Creative Suite
 
-Contained herein is a set of handy scripts for automating the manipulation of tiled sprite sheets within Adobe Creative Suite. The scripts have been written with Unreal Engine content creators in mind, but they may prove useful for other purposes.
+A set of handy scripts for automating the manipulation of tiled sprite sheets within Adobe Creative Suite. The scripts have been written with Unreal Engine content creators in mind, but they may prove useful for other purposes.
 
 ## Script 1: Sprite Sheet from After Effects Composition
 
