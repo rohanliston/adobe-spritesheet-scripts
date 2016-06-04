@@ -63,6 +63,27 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     };
 
     /**
+     * Returns a hash containing the configuration the user has entered.
+     */
+    this.config = function()
+    {
+        return {
+            "sheetName": this.sheetName,
+            "frameSize": {
+                "width":  this.sourceFrameWidth,
+                "height": this.sourceFrameHeight
+            },
+            "numFrames": {
+                "cols": this.numDesiredCols,
+                "rows": this.numDesiredRows,
+                "total": this.numDestinationFrames()
+            },
+            "sheetPixelSize": this.sheetPixelSize(),
+            "outputSizes": this.outputSizes()
+        };
+    }
+
+    /**
      * Returns the number of frames that will be rendered given the number of desired cols/rows.
      */
     this.numDestinationFrames = function()
