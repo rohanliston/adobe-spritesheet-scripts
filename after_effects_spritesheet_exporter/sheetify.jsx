@@ -1,20 +1,9 @@
 #script "Sheetify"
 #target aftereffects
-
-// Load support scripts.
-var scriptPath = new File($.fileName).path;
-var includeFiles = ["SheetifyDialog.jsx"];
-for(var i = 0; i < includeFiles.length; ++i)
-{
-    includeFile = new File(scriptPath + "/(support)/" + includeFiles[i]);
-    if(includeFile.exists)
-        $.evalFile(includeFile);
-    else
-        alert("Support script not found: " + includeFile.toString());
-}
+#include "(support)/SheetifyDialog.jsx"
 
 /**
- * Main function. Finds the active composition, prompts the user for options, and renders the spritesheet.
+ * Finds the active composition, prompts the user for options, and renders the spritesheet.
  */
 function main()
 {
