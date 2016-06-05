@@ -6,6 +6,8 @@ A set of handy scripts for automating the manipulation of tiled sprite sheets wi
 
 This script enables the user to create a sprite sheet directly from an After Effects composition and have it saved automatically in multiple different sizes.
 
+![After Effects Spritesheet Exporter](screenshots/after_effects_spritesheet_exporter.gif)
+
 ## Script 2: Sprite Sheet from Photoshop Layers
 
 This script works much the same as the first one, except it is intended to be used from within Photoshop rather than After Effects. This may be useful in cases where the source images already exist or weren't created in After Effects. The user can either import a set of image files from the file system, or use the layers from the current document.

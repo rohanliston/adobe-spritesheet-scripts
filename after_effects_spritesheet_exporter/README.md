@@ -2,6 +2,8 @@
 
 This script enables the user to export an After Effects composition to a sprite sheet with uniformly-sized cells. If the resultant spritesheet will be a square image, the user is also given the option of automatically resizing and saving the sprite sheet in multiple different common sizes/resolutions.
 
+![After Effects Spritesheet Exporter](../screenshots/after_effects_spritesheet_exporter.gif)
+
 ## Installation
 
 1. Copy the contents of this directory to the following location:
