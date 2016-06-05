@@ -177,7 +177,7 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
 
     /**
      * Returns a set of dimensions that is most likely to produce a square sprite sheet. Used for populating the dialog with initial values.
-     * @TODO: At present, this just returns the nearest perfect square root. Could probably take into account the source frame size to better support rectangular frames.
+     * TODO: At present, this just returns the nearest perfect square root. Could probably take into account the source frame size to better support rectangular frames.
      */
     this.bestDimensions = function()
     {
@@ -269,11 +269,11 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
         // Close the dialog when the cancel button is pressed.
         this.dialog.buttonGroup.cancelButton.onClick = this.cancel.bind(this);
 
-        // Update the dialog when the desired rows/cols is changed
+        // Update the dialog when the desired rows/cols is changed.
         this.dialog.sheetOptionsPanel.dimensionsGroup.colsGroup.numColsText.addEventListener('changing', this.update.bind(this), false);
         this.dialog.sheetOptionsPanel.dimensionsGroup.rowsGroup.numRowsText.addEventListener('changing', this.update.bind(this), false);
 
-        // Update when the sheet name changes
+        // Update when the sheet name changes.
         this.dialog.filenamePanel.filenameText.text = this.sheetName;
         this.dialog.filenamePanel.filenameText.addEventListener('changing', this.update.bind(this), false);
 
@@ -288,7 +288,7 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
         this.dialog.sheetOptionsPanel.numFramesLabel.text = this.numSourceFrames + " frames detected.";
         this.dialog.sheetOptionsPanel.numFramesLabel.graphics.foregroundColor = this.whitePen;
 
-        // Make sure everything is up to date, then show the dialog
+        // Make sure everything is up to date, then show the dialog.
         this.update();
         this.dialog.show();
     };
