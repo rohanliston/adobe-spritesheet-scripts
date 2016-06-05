@@ -52,6 +52,18 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     /** If true, the user has cancelled the dialog. */
     this.cancelled = false;
 
+    /** Cached UI labels/checkboxes for output sizes. */
+    var sizesGroup = this.dialog.saveOptionsPanel.sizesGroup;
+    this.outputSizeElements = [
+        { "size": 128,  "label": sizesGroup.size128Group.size128Comment,   "checkbox": sizesGroup.size128Group.size128Checkbox},
+        { "size": 256,  "label": sizesGroup.size256Group.size256Comment,   "checkbox": sizesGroup.size256Group.size256Checkbox},
+        { "size": 512,  "label": sizesGroup.size512Group.size512Comment,   "checkbox": sizesGroup.size512Group.size512Checkbox},
+        { "size": 1024, "label": sizesGroup.size1024Group.size1024Comment, "checkbox": sizesGroup.size1024Group.size1024Checkbox},
+        { "size": 2048, "label": sizesGroup.size2048Group.size2048Comment, "checkbox": sizesGroup.size2048Group.size2048Checkbox},
+        { "size": 4096, "label": sizesGroup.size4096Group.size4096Comment, "checkbox": sizesGroup.size4096Group.size4096Checkbox},
+        { "size": 8192, "label": sizesGroup.size8192Group.size8192Comment, "checkbox": sizesGroup.size8192Group.size8192Checkbox}
+    ]
+
     /**
      * Returns a string for debugging purposes.
      */
@@ -214,7 +226,28 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
         this.dialog.sheetOptionsPanel.dimensionsGroup.squareLabel.graphics.foregroundColor = (this.isSquare() ? this.greenPen : this.yellowPen);
         this.dialog.sheetOptionsPanel.dimensionsGroup.disparityLabel.graphics.foregroundColor = this.disparityColour();
 
-        // TODO: Add warning if output size > source size
+        // Comment on appropriate output sizes
+        var bestWidth = this.numDesiredCols * this.sourceFrameWidth;
+        for(var i = 0; i < this.outputSizeElements.length; ++i)
+        {
+            var label = this.outputSizeElements[i];
+            if(bestWidth >= label["size"])
+            {
+                label["label"].text = "OK";
+                if(label["checkbox"].value === true)
+                    label["label"].graphics.foregroundColor = this.greenPen;
+                else
+                    label["label"].graphics.foregroundColor = this.greyPen;
+            }
+            else
+            {
+                label["label"].text = "Not recommended";
+                if(label["checkbox"].value === true)
+                    label["label"].graphics.foregroundColor = this.yellowPen;
+                else
+                    label["label"].graphics.foregroundColor = this.greyPen;
+            }
+        }
     };
 
     /**
@@ -242,7 +275,11 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
         this.dialog.filenamePanel.filenameText.text = this.sheetName;
         this.dialog.filenamePanel.filenameText.addEventListener('changing', this.update.bind(this), false);
 
-        // Populate the dialog
+        // Update when checkboxes are clicked.
+        for(var i = 0; i < this.outputSizeElements.length; ++i)
+            var checkbox = this.outputSizeElements[i]["checkbox"].onClick = this.update.bind(this);
+
+        // Populate the dialog.
         var bestDimensions = this.bestDimensions();
         this.dialog.sheetOptionsPanel.dimensionsGroup.colsGroup.numColsText.text = bestDimensions.width;
         this.dialog.sheetOptionsPanel.dimensionsGroup.rowsGroup.numRowsText.text = bestDimensions.height;
