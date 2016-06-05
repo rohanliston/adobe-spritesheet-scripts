@@ -253,7 +253,7 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     };
 
     /**
-     * Closes the dialog box.
+     * Handler for cancel button.
      */
     this.cancel = function()
     {
@@ -262,12 +262,32 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     };
 
     /**
+     * Handler for OK button.
+     */
+    this.ok = function()
+    {
+        var boxChecked = false;
+        for(var i = 0; i < this.outputSizeElements.length; ++i)
+        {
+            if(this.outputSizeElements[i]["checkbox"].value === true)
+                boxChecked = true;
+        }
+
+        // Ensure at least one output checkbox is checked.
+        if(boxChecked)
+            this.dialog.close();
+        else
+            alert("At least one output size must be checked.");
+    }
+
+    /**
      * Populates and shows the dialog box.
      */
     this.show = function()
     {
         // Close the dialog when the cancel button is pressed.
         this.dialog.buttonGroup.cancelButton.onClick = this.cancel.bind(this);
+        this.dialog.buttonGroup.okButton.onClick = this.ok.bind(this);
 
         // Update the dialog when the desired rows/cols is changed.
         this.dialog.sheetOptionsPanel.dimensionsGroup.colsGroup.numColsText.addEventListener('changing', this.update.bind(this), false);
