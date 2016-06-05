@@ -46,6 +46,8 @@ function main()
         // Sheetify!
         var sheetifier = new Sheetifier(sourceComp, sheetifyDialog.config());
         sheetifier.sheetify();
+
+        alert("Spritesheets have been saved to the following directory:\n\n" + app.project.file.absoluteURI.split(".aep")[0] + "/SpriteSheets/")
     }
 }
 
