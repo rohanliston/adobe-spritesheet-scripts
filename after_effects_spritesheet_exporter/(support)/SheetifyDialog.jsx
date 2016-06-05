@@ -43,10 +43,11 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.dialog = new Window(this.contents);
 
     /** Predefined text colours. */
-    this.whitePen  = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0, 1.0, 1.0], 1);
-    this.redPen    = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0, 0.0, 0.0], 1);
-    this.greenPen  = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [0.0, 1.0, 0.0], 1);
-    this.yellowPen = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0, 1.0, 0.0], 1);
+    this.greyPen   = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [0.55, 0.55, 0.55], 1);
+    this.whitePen  = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0,  1.0,  1.0],  1);
+    this.redPen    = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0,  0.0,  0.0],  1);
+    this.greenPen  = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [0.0,  1.0,  0.0],  1);
+    this.yellowPen = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0,  1.0,  0.0],  1);
 
     /**
      * Returns a string for debugging purposes.
