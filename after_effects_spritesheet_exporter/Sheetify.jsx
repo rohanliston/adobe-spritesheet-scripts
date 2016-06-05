@@ -42,9 +42,12 @@ function main()
     sheetifyDialog.bestDimensions();
     sheetifyDialog.show();
 
-    // Sheetify!
-    var sheetifier = new Sheetifier(sourceComp, sheetifyDialog.config());
-    sheetifier.sheetify();
+    if(!sheetifyDialog.cancelled)
+    {
+        // Sheetify!
+        var sheetifier = new Sheetifier(sourceComp, sheetifyDialog.config());
+        sheetifier.sheetify();
+    }
 }
 
 main();

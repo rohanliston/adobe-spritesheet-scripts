@@ -49,6 +49,9 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.greenPen  = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [0.0,  1.0,  0.0],  1);
     this.yellowPen = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0,  1.0,  0.0],  1);
 
+    /** If true, the user has cancelled the dialog. */
+    this.cancelled = false;
+
     /**
      * Returns a string for debugging purposes.
      */
@@ -217,8 +220,9 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     /**
      * Closes the dialog box.
      */
-    this.close = function()
+    this.cancel = function()
     {
+        this.cancelled = true;
         this.dialog.close();
     };
 
@@ -227,8 +231,8 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
      */
     this.show = function()
     {
-        // Close the dialog when the cancel button is pressed
-        this.dialog.buttonGroup.cancelButton.addEventListener('click', this.close.bind(this), false);
+        // Close the dialog when the cancel button is pressed.
+        this.dialog.buttonGroup.cancelButton.onClick = this.cancel.bind(this);
 
         // Update the dialog when the desired rows/cols is changed
         this.dialog.sheetOptionsPanel.dimensionsGroup.colsGroup.numColsText.addEventListener('changing', this.update.bind(this), false);
