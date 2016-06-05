@@ -24,11 +24,11 @@ function SheetifyExporter(sourceComp, config)
         this.createOutputFolder();
 
         // Create scaled destination composition for each output size.
-        for(var i = 0; i < this.config["outputSizes"].length; ++i)
+        for(var i = 0; i < this.config.outputSizes.length; ++i)
         {
-            var scaledComp = this.createScaledComp(this.config["outputSizes"][i]);
+            var scaledComp = this.createScaledComp(this.config.outputSizes[i]);
             var renderItem = queue.items.add(scaledComp);
-            var renderFile = new File(this.outputFolderName + "/" + this.config["sheetName"] + "_" + this.config["outputSizes"][i] + ".psd");
+            var renderFile = new File(this.outputFolderName + "/" + this.config.sheetName + "_" + this.config.outputSizes[i].width + "x" + this.config.outputSizes[i].height + ".psd");
 
             renderItem.outputModules[1].file = renderFile;
             renderItem.outputModules[1].applyTemplate("Photoshop");  // TODO: Support custom templates
@@ -59,9 +59,9 @@ function SheetifyExporter(sourceComp, config)
     {
         // Add new composition with the desired size.
         var scaledComp = app.project.items.addComp(
-            config["sheetName"] + "_spritesheet_" + size,
-            size,
-            size,
+            config.sheetName + "_spritesheet_" + size.width + "x" + size.height,
+            size.width,
+            size.height,
             this.sourceComp.pixelAspect,
             1 / sourceComp.frameRate,
             this.sourceComp.frameRate
@@ -71,10 +71,12 @@ function SheetifyExporter(sourceComp, config)
         var frame = scaledComp.layers.add(this.sourceComp);
 
         // Scale layer to fill new composition.
-        var scale = size / this.sourceComp.width * 100;
+        var xScale = size.width  / this.sourceComp.width * 100;
+        var yScale = size.height / this.sourceComp.height * 100;
+
         frame.property("Transform").property("Anchor Point").setValue([0,0]);
         frame.property("Transform").property("Position").setValue([0,0]);
-        frame.property("Transform").property("Scale").setValue([scale, scale]);
+        frame.property("Transform").property("Scale").setValue([xScale, yScale]);
 
         this.scaledComps.push(scaledComp);
         return scaledComp;

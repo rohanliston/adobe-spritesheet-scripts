@@ -40,42 +40,17 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.contents = sheetifyDialogContents;
 
     /** Dialog box object. */
-    this.dialog = new Window(this.contents);
-
-    /** Predefined text colours. */
-    this.greyPen   = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [0.55, 0.55, 0.55], 1);
-    this.whitePen  = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0,  1.0,  1.0],  1);
-    this.redPen    = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0,  0.0,  0.0],  1);
-    this.greenPen  = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [0.0,  1.0,  0.0],  1);
-    this.yellowPen = this.dialog.graphics.newPen(this.dialog.graphics.PenType.SOLID_COLOR, [1.0,  1.0,  0.0],  1);
+    this.dialog = new SheetifyDialogContents();
 
     /** If true, the user has cancelled the dialog. */
     this.cancelled = false;
 
-    /** Cached UI labels/checkboxes for output sizes. */
-    var sizesGroup = this.dialog.saveOptionsPanel.sizesGroup;
-    this.outputSizeElements = [
-        { "size": 128,  "label": sizesGroup.size128Group.size128Comment,   "checkbox": sizesGroup.size128Group.size128Checkbox},
-        { "size": 256,  "label": sizesGroup.size256Group.size256Comment,   "checkbox": sizesGroup.size256Group.size256Checkbox},
-        { "size": 512,  "label": sizesGroup.size512Group.size512Comment,   "checkbox": sizesGroup.size512Group.size512Checkbox},
-        { "size": 1024, "label": sizesGroup.size1024Group.size1024Comment, "checkbox": sizesGroup.size1024Group.size1024Checkbox},
-        { "size": 2048, "label": sizesGroup.size2048Group.size2048Comment, "checkbox": sizesGroup.size2048Group.size2048Checkbox},
-        { "size": 4096, "label": sizesGroup.size4096Group.size4096Comment, "checkbox": sizesGroup.size4096Group.size4096Checkbox},
-        { "size": 8192, "label": sizesGroup.size8192Group.size8192Comment, "checkbox": sizesGroup.size8192Group.size8192Checkbox}
-    ]
-
     /**
      * Returns a string for debugging purposes.
      */
-    this.debugString = function()
+    this.toString = function()
     {
-        return "Sheet name: "                  + this.sheetName
-             + "\nNum source frames: "         + this.numSourceFrames
-             + "\nSource frame width/height: " + this.sourceFrameWidth + " x " + this.sourceFrameHeight
-             + "\nDesired cols/rows: "         + this.numDesiredCols + " x " + this.numDesiredRows
-             + "\nResultant pixel size: "      + this.sheetPixelSizeString()
-             + "\nSquare: "                    + (this.isSquare() ? "true" : "false")
-             + "\nOutput sizes: "              + this.outputSizes().toString();
+        return JSON.stringify(this.config());
     };
 
     /**
@@ -84,18 +59,18 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.config = function()
     {
         return {
-            "sheetName": this.sheetName,
-            "frameSize": {
-                "width":  this.sourceFrameWidth,
-                "height": this.sourceFrameHeight
+            sheetName: this.sheetName,
+            frameSize: {
+                width:  this.sourceFrameWidth,
+                height: this.sourceFrameHeight
             },
-            "numFrames": {
-                "cols": this.numDesiredCols,
-                "rows": this.numDesiredRows,
-                "total": this.numDestinationFrames()
+            numFrames: {
+                cols: this.numDesiredCols,
+                rows: this.numDesiredRows,
+                total: this.numDestinationFrames()
             },
-            "sheetPixelSize": this.sheetPixelSize(),
-            "outputSizes": this.outputSizes()
+            sheetPixelSize: this.sheetPixelSize(),
+            outputSizes: this.outputSizes()
         };
     }
 
@@ -140,9 +115,9 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.disparityColour = function()
     {
         if(this.disparity() == 0)
-            return this.greenPen;
+            return this.dialog.greenPen;
 
-        return this.redPen;
+        return this.dialog.redPen;
     }
 
     /**
@@ -151,7 +126,7 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.isSquare = function()
     {
         return (
-            this.numDesiredCols == this.numDesiredRows &&
+            this.numDesiredCols   == this.numDesiredRows &&
             this.sourceFrameWidth == this.sourceFrameHeight
         );
     };
@@ -161,7 +136,7 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
      */
     this.sheetPixelSize = function() {
         return {
-            width:  this.sourceFrameWidth * this.numDesiredCols,
+            width:  this.sourceFrameWidth  * this.numDesiredCols,
             height: this.sourceFrameHeight * this.numDesiredRows
         };
     };
@@ -177,14 +152,14 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
 
     /**
      * Returns a set of dimensions that is most likely to produce a square sprite sheet. Used for populating the dialog with initial values.
-     * TODO: At present, this just returns the nearest perfect square root. Could probably take into account the source frame size to better support rectangular frames.
+     * TODO: At present, this just returns the nearest perfect square root. Should probably take into account the source frame size to better support rectangular frames.
      */
-    this.bestDimensions = function()
+    this.bestCellConfiguration = function()
     {
         var x = Math.round(Math.sqrt(this.numSourceFrames));
         return {
-            width: x,
-            height: x
+            rows: x,
+            cols: x
         };
     }
 
@@ -194,61 +169,119 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.outputSizes = function()
     {
         var sizes = [];
-        var sizesGroup = this.dialog.saveOptionsPanel.sizesGroup;
-
-        if(sizesGroup.size8192Group.size8192Checkbox.value === true) sizes.push(8192);
-        if(sizesGroup.size4096Group.size4096Checkbox.value === true) sizes.push(4096);
-        if(sizesGroup.size2048Group.size2048Checkbox.value === true) sizes.push(2048);
-        if(sizesGroup.size1024Group.size1024Checkbox.value === true) sizes.push(1024);
-        if(sizesGroup.size512Group.size512Checkbox.value === true)   sizes.push(512);
-        if(sizesGroup.size256Group.size256Checkbox.value === true)   sizes.push(256);
-        if(sizesGroup.size128Group.size128Checkbox.value === true)   sizes.push(128);
+        if(this.dialog.sizeSquareGroup.enabled)
+        {
+            // Add all selected square sizes
+            for(var i = 0; i < this.dialog.squareOutputSizeElements.length; ++i)
+            {
+                var item = this.dialog.squareOutputSizeElements[i];
+                if(item["checkbox"].value === true)
+                    sizes.push(item["size"]);
+            }
+        }
+        else
+        {
+            // Add original size
+            var pixelSize = this.sheetPixelSize();
+            sizes.push({
+                width:  pixelSize.width,
+                height: pixelSize.height
+            })
+        }
 
         return sizes;
     };
+
+    /**
+     * Synchronises internal configuration with UI input values.
+     */
+    this.updateConfig = function()
+    {
+        this.sheetName      = this.dialog.filenameText.text;
+        this.numDesiredCols = this.dialog.numColsText.text;
+        this.numDesiredRows = this.dialog.numRowsText.text;
+    };
+
+    /**
+     * Recalculates dimensions area text.
+     */
+    this.updateDimensions = function()
+    {
+        // Calculate dimensions.
+        var total = this.numDesiredCols + " x " + this.numDesiredRows + " (" + (this.numDesiredCols * this.numDesiredRows) + ")";
+        this.dialog.totalLabel.text     = "Frame dimensions: " + total;
+        this.dialog.squareLabel.text    = "Pixel dimensions: " + this.sheetPixelSizeString();
+        this.dialog.disparityLabel.text = this.disparityString();
+
+        // Determine colours to be used.
+        this.dialog.totalLabel.graphics.foregroundColor     = (this.isSquare() ? this.dialog.greenPen : this.dialog.yellowPen);
+        this.dialog.squareLabel.graphics.foregroundColor    = (this.isSquare() ? this.dialog.greenPen : this.dialog.yellowPen);
+        this.dialog.disparityLabel.graphics.foregroundColor = this.disparityColour();
+    };
+
+    /**
+     * Updates the comments next to each checkbox.
+     */
+    this.updateSquareSizeComments = function()
+    {
+        var largestSensibleSize = {
+            width: this.numDesiredCols  * this.sourceFrameWidth,
+            height: this.numDesiredRows * this.sourceFrameHeight
+        }
+
+        for(var i = 0; i < this.dialog.squareOutputSizeElements.length; ++i)
+        {
+            var label = this.dialog.squareOutputSizeElements[i];
+            if(largestSensibleSize.width >= label.size.width || largestSensibleSize.height >= label.size.height)
+                this.dialog.setOK(label.comment, label.checkbox);
+            else
+                this.dialog.setNotRecommended(label.comment, label.checkbox);
+        }
+    }
+
+    /**
+     * Enables the square sizes group, disabling the non-square group.
+     */
+    this.activateSquareSizesGroup = function()
+    {
+        this.dialog.sizeSquareGroup.enabled                      = true;
+        this.dialog.sizeOriginalGroup.enabled                    = false;
+        this.dialog.sizeOriginalComment.graphics.foregroundColor = this.dialog.greyPen;
+        this.dialog.sizeOriginalComment.text                     = "Unavailable";
+    }
+
+    /**
+     * Enables the non-square group, disabling the square sizes group.
+     */
+    this.activateOriginalSizesGroup = function()
+    {
+        this.dialog.sizeOriginalGroup.enabled = true;
+        this.dialog.sizeSquareGroup.enabled   = false;
+        this.dialog.sizeOriginalComment.text  = "OK";
+
+        if(this.dialog.sizeOriginalCheckbox.value === true)
+            this.dialog.sizeOriginalComment.graphics.foregroundColor = this.dialog.greenPen;
+        else
+            this.dialog.sizeOriginalComment.graphics.foregroundColor = this.dialog.greyPen;
+    }
 
     /**
      * Updates the dialog contents according to the desired number of cols/rows.
      */
     this.update = function()
     {
-        // Update internal variables
-        this.sheetName = this.dialog.filenamePanel.filenameText.text;
-        this.numDesiredCols = this.dialog.sheetOptionsPanel.dimensionsGroup.colsGroup.numColsText.text;
-        this.numDesiredRows = this.dialog.sheetOptionsPanel.dimensionsGroup.rowsGroup.numRowsText.text;
+        this.updateConfig();
+        this.updateDimensions();
 
-        // Recalculate dimensions
-        var total = this.numDesiredCols + " x " + this.numDesiredRows + " (" + (this.numDesiredCols * this.numDesiredRows) + ")";
-        this.dialog.sheetOptionsPanel.dimensionsGroup.totalLabel.text = "Frame dimensions: " + total;
-        this.dialog.sheetOptionsPanel.dimensionsGroup.squareLabel.text = "Pixel dimensions: " + this.sheetPixelSizeString();
-        this.dialog.sheetOptionsPanel.dimensionsGroup.disparityLabel.text = this.disparityString();
-
-        // Determine colours to be used
-        this.dialog.sheetOptionsPanel.dimensionsGroup.totalLabel.graphics.foregroundColor = (this.isSquare() ? this.greenPen : this.yellowPen);
-        this.dialog.sheetOptionsPanel.dimensionsGroup.squareLabel.graphics.foregroundColor = (this.isSquare() ? this.greenPen : this.yellowPen);
-        this.dialog.sheetOptionsPanel.dimensionsGroup.disparityLabel.graphics.foregroundColor = this.disparityColour();
-
-        // Comment on appropriate output sizes
-        var bestWidth = this.numDesiredCols * this.sourceFrameWidth;
-        for(var i = 0; i < this.outputSizeElements.length; ++i)
+        // Activate appropriate checkbox group.
+        if(this.isSquare())
         {
-            var label = this.outputSizeElements[i];
-            if(bestWidth >= label["size"])
-            {
-                label["label"].text = "OK";
-                if(label["checkbox"].value === true)
-                    label["label"].graphics.foregroundColor = this.greenPen;
-                else
-                    label["label"].graphics.foregroundColor = this.greyPen;
-            }
-            else
-            {
-                label["label"].text = "Not recommended";
-                if(label["checkbox"].value === true)
-                    label["label"].graphics.foregroundColor = this.yellowPen;
-                else
-                    label["label"].graphics.foregroundColor = this.greyPen;
-            }
+            this.activateSquareSizesGroup();
+            this.updateSquareSizeComments();
+        }
+        else
+        {
+            this.activateOriginalSizesGroup();
         }
     };
 
@@ -258,7 +291,7 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.cancel = function()
     {
         this.cancelled = true;
-        this.dialog.close();
+        this.dialog.window.close();
     };
 
     /**
@@ -266,18 +299,70 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
      */
     this.ok = function()
     {
+        // TODO: Tidy this up
         var boxChecked = false;
-        for(var i = 0; i < this.outputSizeElements.length; ++i)
+        for(var i = 0; i < this.dialog.squareOutputSizeElements.length; ++i)
         {
-            if(this.outputSizeElements[i]["checkbox"].value === true)
+            if(this.dialog.squareOutputSizeElements[i].checkbox.value === true)
                 boxChecked = true;
         }
 
+        if(this.dialog.sizeOriginalCheckbox.value === true)
+            boxChecked = true;
+
         // Ensure at least one output checkbox is checked.
         if(boxChecked)
-            this.dialog.close();
+            this.dialog.window.close();
         else
             alert("At least one output size must be checked.");
+    }
+
+    /**
+     * Adds event listeners to dialog box buttons.
+     */
+    this.bindButtons = function()
+    {
+        // Close the dialog when the cancel button is pressed.
+        this.dialog.cancelButton.onClick = this.cancel.bind(this);
+        this.dialog.okButton.onClick     = this.ok.bind(this);
+    }
+
+    /**
+     * Adds event listeners to text inputs.
+     */
+    this.bindTextInputs = function()
+    {
+        // Update the dialog when the desired rows/cols is changed.
+        this.dialog.numColsText.addEventListener('changing', this.update.bind(this), false);
+        this.dialog.numRowsText.addEventListener('changing', this.update.bind(this), false);
+
+        // Update when the sheet name changes.
+        this.dialog.filenameText.addEventListener('changing', this.update.bind(this), false);
+    }
+
+    /**
+     * Adds event listeners to checkboxes.
+     */
+    this.bindCheckboxes = function()
+    {
+        // Update when checkboxes are clicked.
+        this.dialog.sizeOriginalCheckbox.onClick = this.update.bind(this);
+        for(var i = 0; i < this.dialog.squareOutputSizeElements.length; ++i)
+            var checkbox = this.dialog.squareOutputSizeElements[i].checkbox.onClick = this.update.bind(this);
+    }
+
+    /**
+     * Populates the dialog box with initial values.
+     */
+    this.populateDialog = function()
+    {
+        var bestCellConfiguration = this.bestCellConfiguration();
+
+        this.dialog.filenameText.text   = this.sheetName;
+        this.dialog.numColsText.text    = bestCellConfiguration.cols;
+        this.dialog.numRowsText.text    = bestCellConfiguration.rows;
+        this.dialog.numFramesLabel.text = this.numSourceFrames + " frames detected.";
+        this.dialog.numFramesLabelPen   = this.dialog.whitePen;
     }
 
     /**
@@ -285,31 +370,16 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
      */
     this.show = function()
     {
-        // Close the dialog when the cancel button is pressed.
-        this.dialog.buttonGroup.cancelButton.onClick = this.cancel.bind(this);
-        this.dialog.buttonGroup.okButton.onClick = this.ok.bind(this);
+        // Bind UI actions.
+        this.bindButtons();
+        this.bindTextInputs();
+        this.bindCheckboxes();
 
-        // Update the dialog when the desired rows/cols is changed.
-        this.dialog.sheetOptionsPanel.dimensionsGroup.colsGroup.numColsText.addEventListener('changing', this.update.bind(this), false);
-        this.dialog.sheetOptionsPanel.dimensionsGroup.rowsGroup.numRowsText.addEventListener('changing', this.update.bind(this), false);
-
-        // Update when the sheet name changes.
-        this.dialog.filenamePanel.filenameText.text = this.sheetName;
-        this.dialog.filenamePanel.filenameText.addEventListener('changing', this.update.bind(this), false);
-
-        // Update when checkboxes are clicked.
-        for(var i = 0; i < this.outputSizeElements.length; ++i)
-            var checkbox = this.outputSizeElements[i]["checkbox"].onClick = this.update.bind(this);
-
-        // Populate the dialog.
-        var bestDimensions = this.bestDimensions();
-        this.dialog.sheetOptionsPanel.dimensionsGroup.colsGroup.numColsText.text = bestDimensions.width;
-        this.dialog.sheetOptionsPanel.dimensionsGroup.rowsGroup.numRowsText.text = bestDimensions.height;
-        this.dialog.sheetOptionsPanel.numFramesLabel.text = this.numSourceFrames + " frames detected.";
-        this.dialog.sheetOptionsPanel.numFramesLabel.graphics.foregroundColor = this.whitePen;
+        // Add initial values.
+        this.populateDialog();
 
         // Make sure everything is up to date, then show the dialog.
         this.update();
-        this.dialog.show();
+        this.dialog.window.show();
     };
 }

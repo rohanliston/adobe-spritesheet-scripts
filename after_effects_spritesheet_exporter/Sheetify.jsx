@@ -39,7 +39,6 @@ function main()
 
     // Show options dialog.
     var sheetifyDialog = new SheetifyDialog(sourceComp.name, numSourceFrames, sourceComp.width, sourceComp.height);
-    sheetifyDialog.bestDimensions();
     sheetifyDialog.show();
 
     if(!sheetifyDialog.cancelled)
