@@ -1,24 +1,29 @@
 /**
  * SheetifyExporter: Exports a composition to file/s.
  */
-function SheetifyExporter()
+function SheetifyExporter(sourceComp, config)
 {
     /** Name of the output folder. TODO: Use a File dialog to pick output location. */
     this.outputFolderName = "SpriteSheets"
 
+    /** Composition containing the spritesheet to be exported. */
+    this.sourceComp = sourceComp;
+
+    /** Configuration options specified by the user. */
+    this.config = config;
+
     /**
      * Exports the spritesheet to whatever file sizes/formats the user specified.
      */
-    this.export = function(comp, config)
+    this.export = function()
     {
         var queue = app.project.renderQueue;
         this.createOutputFolder();
 
-        // Render all output file sizes
-        for(var i = 0; i < config["outputSizes"].length; ++i)
+        // Create scaled destination composition for each output size.
+        for(var i = 0; i < this.config["outputSizes"].length; ++i)
         {
-            var renderItem = queue.items.add(comp);
-            var renderFile = new File(this.outputFolderName + "/" + config["sheetName"] + "_" + config["outputSizes"][i] + ".psd");
+            var renderFile = new File(this.outputFolderName + "/" + this.config["sheetName"] + "_" + this.config["outputSizes"][i] + ".psd");
 
             renderItem.outputModules[1].file = renderFile;
             renderItem.outputModules[1].applyTemplate("TIFF Sequence with Alpha");  // TODO: Support custom templates

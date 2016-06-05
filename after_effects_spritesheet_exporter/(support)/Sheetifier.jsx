@@ -76,7 +76,7 @@ function Sheetifier(sourceComp, config)
 
     this.export = function()
     {
-        var exporter = new SheetifyExporter();
-        exporter.export(this.destComp, this.config);
+        var exporter = new SheetifyExporter(this.destComp, this.config);
+        exporter.export();
     }
 }
