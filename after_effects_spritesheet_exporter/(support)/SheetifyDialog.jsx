@@ -124,12 +124,14 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     this.disparityString = function()
     {
         var disparity = this.disparity();
-        var result = (disparity == 0) ? "Sheet will be filled perfectly."
-                   : (disparity < 0)  ? -disparity + " " + (disparity === -1 ? "frame" : "frames") + " will be left out."
-                   : (disparity > 0)  ? "Sheet will contain " + disparity + " empty " + (disparity == 1 ? "frame." : "frames.")
-                   : "Invalid cols/rows input.";
-
-        return result;
+        if(disparity == 0)
+            return "Sheet will be filled perfectly.";
+        else if(disparity < 0)
+            return -disparity + " " + (disparity === -1 ? "frame" : "frames") + " will be left out.";
+        else if(disparity > 0)
+            return "Sheet will contain " + disparity + " empty " + (disparity == 1 ? "frame." : "frames.");
+        else
+            return "Invalid cols/rows input.";
     };
 
     /**
