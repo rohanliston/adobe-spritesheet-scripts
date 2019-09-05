@@ -36,9 +36,6 @@ function SheetifyDialog(sheetName, numSourceFrames, sourceFrameWidth, sourceFram
     /** Number of source frames available. */
     this.numSourceFrames = numSourceFrames;
 
-    /** Dialog box structure. Contents will be populated in show(). */
-    this.contents = sheetifyDialogContents;
-
     /** Dialog box object. */
     this.dialog = new SheetifyDialogContents();
 

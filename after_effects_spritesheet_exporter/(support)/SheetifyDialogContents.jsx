@@ -3,7 +3,7 @@
  */
 function SheetifyDialogContents()
 {
-    /** Definition of the dialog box. My kingdom for ES6 backtick strings. */
+    /** Definition of the dialog box. */
     this.contents = "dialog {                                                                                                           \
         text: 'Sheetify',                                                                                                               \
         alignChildren: 'fill',                                                                                                          \
